@@ -32,26 +32,27 @@ public class BinarySearchLibrary {
     	int firstIndex(List<T> list, 
 	               	T target, Comparator<T> comp) {
 		
-		int low = -1;
-		int high = list.size()-1;
-
-	    while (high - low != 1) {
-	    	
-	        int mid = (low + high)/2;
-	        T midval = list.get(mid);
-	        int cmp = comp.compare(midval,target);
-
-	        if (cmp < 0)
-	            low = mid;
-	        else if (cmp >= 0)
-	            high = mid;
-	        
-	     }
-	    
-	    if(list.get(high).equals(target))
-	    	return high;  // target found
-	    
-	    return -1;  // target not found
+		int lo = -1;
+		int hi = list.size() - 1;
+		
+		while(hi - lo > 1){
+			
+			int mid = (lo + hi)/2;
+			
+			if(comp.compare(target, list.get(mid)) <= 0){
+				hi = mid;
+			} 
+			
+			else {
+				lo = mid;
+			}
+			
+		}
+		
+		if(comp.compare(target, list.get(hi)) == 0)
+			return hi;
+		
+		return -1;
 	}
 
 	/**
@@ -70,26 +71,26 @@ public class BinarySearchLibrary {
 	int lastIndex(List<T> list, 
                	  T target, Comparator<T> comp) {
 		
-		int low = 0;
-		int high = list.size();
-
-	    while (high - low != 1) {
-	    	
-	        int mid = (low + high)/2;
-	        T midval = list.get(mid);
-	        int cmp = comp.compare(midval,target);
-
-	        if (cmp <= 0)
-	            low = mid;
-	        else if (cmp > 0)
-	            high = mid;
-	        
-	     }
-	    
-	    if(list.get(high).equals(high))
-	    	return high;  // target found
-	    
-	    return -1;  // target not found
+		int lo = 0;
+		int hi = list.size();
+		
+		while(hi - lo > 1){
+			
+			int mid = (lo + hi)/2;
+			
+			if(comp.compare(target, list.get(mid)) < 0){
+				hi = mid;
+			} 
+			
+			else {
+				lo = mid;
+			}
+		}
+		if(comp.compare(target, list.get(lo)) == 0)
+			return lo;
+		
+		else
+			return -1;
 		
 	}
 	
