@@ -89,8 +89,7 @@ public class BinarySearchLibrary {
 		if(comp.compare(target, list.get(lo)) == 0)
 			return lo;
 		
-		else
-			return -1;
+		return -1;
 		
 	}
 	
