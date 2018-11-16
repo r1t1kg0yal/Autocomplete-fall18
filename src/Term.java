@@ -91,31 +91,21 @@ public class Term implements Comparable<Term> {
 		 */
 		public int compare(Term v, Term w) {
 			
-			String vsub = v.getWord();
-			String wsub = w.getWord();
+			String vword = v.getWord();
+			String wword = w.getWord();
 			
 			//begin manipulating strings
-			int vlength = vsub.length();
-			int wlength = wsub.length();
+			int vlength = vword.length();
+			int wlength = wword.length();
 			
-			if(vlength < myPrefixSize)
-			{
-				for(int i = vlength; i < myPrefixSize; i++)
-					vsub = vsub + " ";
-			}
+			if(vlength > myPrefixSize)
+				vword = vword.substring(0, myPrefixSize);
 			
-			if(wlength < myPrefixSize)
-			{
-				for(int i = wlength; i < myPrefixSize; i++)
-					wsub = wsub + " ";
-			}
+			if(wlength > myPrefixSize)
+				wword = wword.substring(0, myPrefixSize);
 			
-			vsub = vsub.substring(0, myPrefixSize);
-			wsub = wsub.substring(0, myPrefixSize);
-			
-			//compare functions
-			if(vsub.compareTo(wsub) < 0) return -1;
-			if(vsub.compareTo(wsub) > 0) return 1;
+			if(vword.compareTo(wword) < 0) return -1;
+			if(vword.compareTo(wword) > 0) return 1;
 			return 0;
 			
 		}
