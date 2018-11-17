@@ -28,7 +28,7 @@ public class BenchMarkForAutocomplete {
 	}
 	
 	public void runAM() {
-		int matchSize = 1;
+		int matchSize = 10000;
 		String[] all = {"","a", "b", "c", "x", "y", "z", "aa", "az", "za", "zz"};
 		System.out.printf("search\tsize\t#match\tbinary\tbrute\n");
 		for(String s : all) {

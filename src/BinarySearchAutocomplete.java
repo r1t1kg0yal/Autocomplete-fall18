@@ -105,23 +105,33 @@ public class BinarySearchAutocomplete implements Autocompletor {
 	 */
 	@Override
 	public List<Term> topMatches(String prefix, int k) {
-
+		
+		//check for null pointer, throw exception
 		if(prefix == null)
 			throw new NullPointerException("Prefix is null.");
 		
+		//store first index of matching prefix
 		int first = firstIndexOf(myTerms, new Term(prefix, 0), new Term.PrefixOrder(prefix.length()));
+		
+		//return empty list if index doesn't exist
 		if(first == -1)
 			return new ArrayList <> ();
 		
+		//store last index of matching prefix
 		int last = lastIndexOf(myTerms, new Term(prefix, 0), new Term.PrefixOrder(prefix.length()));
 		
+		//create new array storing all cases of matching prefix using stored indexes
 		Term [] match = Arrays.copyOfRange(myTerms, first, last+1);
+		
+		//sort array in descending weighted order
 		Arrays.sort(match, new Term.ReverseWeightOrder());
 		
+		//store whether number of words to return or number of current words is less
 	    int numResults = Math.min(k, last-first+1);
 	    
 	    ArrayList <Term> list = new ArrayList <> ();
 	    
+	    //add each word either top k words or all words in match
 	    for(int i = 0; i < numResults; i++)
 	    	list.add(match[i]);
 	    

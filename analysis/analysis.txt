@@ -3,9 +3,38 @@ Put your name and netid here
 (1) Run the program BenchmarkForAutocomplete and copy/paste the 
 results here this for #matches = 20
 
+search	size	#match	binary	brute
+		456976	20		0.2319	0.0087
+a		17576	20		0.0030	0.0071
+b		17576	20		0.0032	0.0044
+c		17576	20		0.0034	0.0042
+x		17576	20		0.0039	0.0056
+y		17576	20		0.0040	0.0045
+z		17576	20		0.0039	0.0072
+aa		676		20		0.0001	0.0048
+az		676		20		0.0001	0.0044
+za		676		20		0.0001	0.0044
+zz		676		20		0.0001	0.0076
+
 (2) Run the program again for #matches = 10000, paste the results, 
 and then make any conclusions about how the # matches 
 effects the runtime. 
+
+search	size	#match	binary	brute
+		456976	10000	0.2652	0.0249
+a		17576	10000	0.0070	0.0243
+b		17576	10000	0.0035	0.0091
+c		17576	10000	0.0035	0.0108
+x		17576	10000	0.0044	0.0088
+y		17576	10000	0.0042	0.0134
+z		17576	10000	0.0042	0.0087
+aa		676		10000	0.0001	0.0080
+az		676		10000	0.0001	0.0061
+za		676		10000	0.0001	0.0052
+zz		676		10000	0.0001	0.0057
+
+The number of matches does not have a significant impact on the 
+runtime for binary, and only marginally increases the runtime for brute.
 
 (3) Copy/paste the code from BruteAutocomplete.topMatches below. 
 Explain what the Big-Oh complexity of the entire loop: 
@@ -15,16 +44,106 @@ M, the number of terms that match the prefix.
 Assume that every priority-queue operation runs in O(log k) time. 
 Explain your answer which should be in terms of N, M, and k.
 
+START CODE
+if (k < 0) {
+			throw new IllegalArgumentException("Illegal value of k:"+k);
+		}
+		
+// maintain pq of size k
+PriorityQueue<Term> pq = new PriorityQueue<Term>(10, new Term.WeightOrder());
+for (Term t : myTerms) {
+	if (!t.getWord().startsWith(prefix))
+		continue;
+	if (pq.size() < k) {
+		pq.add(t);
+	} else if (pq.peek().getWeight() < t.getWeight()) {
+		pq.remove();
+		pq.add(t);
+	}
+}
+int numResults = Math.min(k, pq.size());
+LinkedList<Term> ret = new LinkedList<>();
+for (int i = 0; i < numResults; i++) {
+	ret.addFirst(pq.remove());
+}
+return ret;
+END CODE
+
+Time complexity: O(NlogM + klogM)
+
+The code first looks at each of N terms in myTerms, and performs 
+a logM complexity operation for each term that matches the 
+startsWith(prefix) condition, resulting in the first term being a 
+NlogM operation. Then, to add the terms to a new LinkedList,
+the code looks at each of the first k words (worst case), and 
+performs a logM operation on each word by removing it. Each of the 
+operations on the priority queue that change the size of the priority
+queue are logM time because the PQ contains M Terms and each addition
+and removal is a log operation.
+
 (4) Explain why the last for loop in BruteAutocomplete.topMatches 
 uses a LinkedList (and not an ArrayList) 
 AND why the PriorityQueue uses Term.WeightOrder to get 
 the top k heaviest matches -- rather than 
 using Term.ReverseWeightOrder.
 
+The last for loop uses a LinkedList and not an ArrayList because in order
+to return a sorted list in descending order of weights, as the Terms keep
+getting removed from the priority queue, they keep increasing, and thus must
+be added to the beginning of the list. Adding at the beginning of the ArrayList
+would be a very slow procedure as it would force every element in the ArrayList to
+shift one over, which the LinkedList is able to avoid.
+
+The priority queue uses weight order because the code inside the first for loop
+iterates through each term in myTerms, throwing out the smallest weight if the
+priority queue has too many terms and does not maintain the invariant. By using
+WeightOrder, the code in the for loop ensures that it checks every term in myTerms
+and compares it to the smallest value of the weight in the PriorityQueue to 
+determine whether to be added or not.
 
 (5) Explain what the runtime of the 
 BinarySearchAutocomplete.topMatches code that you 
 implemented is by copy/pasting the code below 
 and explaining your answer in terms of N, M, and k.
 
+START CODE
+//check for null pointer, throw exception
+if(prefix == null)
+	throw new NullPointerException("Prefix is null.");
 
+//store first index of matching prefix
+int first = firstIndexOf(myTerms, new Term(prefix, 0), new Term.PrefixOrder(prefix.length()));
+
+//return empty list if index doesn't exist
+if(first == -1)
+	return new ArrayList <> ();
+
+//store last index of matching prefix
+int last = lastIndexOf(myTerms, new Term(prefix, 0), new Term.PrefixOrder(prefix.length()));
+
+//create new array storing all cases of matching prefix using stored indexes
+Term [] match = Arrays.copyOfRange(myTerms, first, last+1);
+
+//sort array in descending weighted order
+Arrays.sort(match, new Term.ReverseWeightOrder());
+
+//store whether number of words to return or number of current words is less
+int numResults = Math.min(k, last-first+1);
+
+ArrayList <Term> list = new ArrayList <> ();
+
+//add each word either top k words or all words in match
+for(int i = 0; i < numResults; i++)
+	list.add(match[i]);
+
+return list;
+END CODE
+
+Time Complexity: O(logN + M + logM)
+
+The code first determines the first and last indexes of matching Terms
+which is two logN operations, as specified by the runtime complexity of 
+the firstIndex and lastIndex methods. Then, the code copies the words
+in the matching range to a new array, resulting in M additions for 
+each of the relevant matches. Finally, this array is sorted using
+the internal binary method, resulting in a logM sort.

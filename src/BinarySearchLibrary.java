@@ -32,29 +32,34 @@ public class BinarySearchLibrary {
     	int firstIndex(List<T> list, 
 	               	T target, Comparator<T> comp) {
 		
+		//check if list is empty
 		if(list.size() == 0)
 			return -1;
 		
-		int lo = -1;
-		int hi = list.size() - 1;
+		//set original bounds
+		int low = -1;
+		int high = list.size() - 1;
 		
-		while(hi - lo > 1){
+		//while 1 term not settled on
+		while(low + 1 != high) {
 			
-			int mid = (lo + hi)/2;
+			int mid = (low + high)/2;
 			
 			if(comp.compare(target, list.get(mid)) <= 0){
-				hi = mid;
+				high = mid;
 			} 
 			
 			else {
-				lo = mid;
+				low = mid;
 			}
 			
 		}
 		
-		if(comp.compare(target, list.get(hi)) == 0)
-			return hi;
+		//if settled on term is target return index
+		if(comp.compare(target, list.get(high)) == 0)
+			return high;
 		
+		//if settled on term is not target return -1
 		return -1;
 	}
 
@@ -74,27 +79,33 @@ public class BinarySearchLibrary {
 	int lastIndex(List<T> list, 
                	  T target, Comparator<T> comp) {
 		
+		//check if list is empty
 		if(list.size() == 0)
 			return -1;
 		
-		int lo = 0;
-		int hi = list.size();
+		//set original bounds
+		int low = 0;
+		int high = list.size();
 		
-		while(hi - lo > 1){
+		//while 1 term not settled on
+		while(low + 1 != high){
 			
-			int mid = (lo + hi)/2;
+			int mid = (low + high)/2;
 			
 			if(comp.compare(target, list.get(mid)) < 0){
-				hi = mid;
+				high = mid;
 			} 
 			
 			else {
-				lo = mid;
+				low = mid;
 			}
 		}
-		if(comp.compare(target, list.get(lo)) == 0)
-			return lo;
 		
+		//if settled on term is target return index
+		if(comp.compare(target, list.get(low)) == 0)
+			return low;
+		
+		//if settled on term is not target return -1
 		return -1;
 		
 	}

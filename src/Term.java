@@ -91,19 +91,25 @@ public class Term implements Comparable<Term> {
 		 */
 		public int compare(Term v, Term w) {
 			
+			//get words
 			String vword = v.getWord();
 			String wword = w.getWord();
 			
 			//begin manipulating strings
+			
+			//get length of words
 			int vlength = vword.length();
 			int wlength = wword.length();
 			
+			//cut down word v to prefix
 			if(vlength > myPrefixSize)
 				vword = vword.substring(0, myPrefixSize);
 			
+			//cut down word w to prefix
 			if(wlength > myPrefixSize)
 				wword = wword.substring(0, myPrefixSize);
 			
+			//compare words and return result
 			if(vword.compareTo(wword) < 0) return -1;
 			if(vword.compareTo(wword) > 0) return 1;
 			return 0;
@@ -121,6 +127,7 @@ public class Term implements Comparable<Term> {
 	public static class ReverseWeightOrder implements Comparator<Term> {
 		public int compare(Term v, Term w) {
 			
+			//return such that higher weight comes first
 			if(v.getWeight() > w.getWeight()) return -1;
 			if(v.getWeight() < w.getWeight()) return 1;
 			return 0;
@@ -137,6 +144,7 @@ public class Term implements Comparable<Term> {
 	public static class WeightOrder implements Comparator<Term> {
 		public int compare(Term v, Term w) {
 			
+			//return such that lower weight comes first
 			if(v.getWeight() > w.getWeight()) return 1;
 			if(v.getWeight() < w.getWeight()) return -1;
 			return 0;
