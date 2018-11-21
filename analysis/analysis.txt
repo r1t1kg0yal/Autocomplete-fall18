@@ -61,25 +61,19 @@ for (Term t : myTerms) {
 		pq.add(t);
 	}
 }
-int numResults = Math.min(k, pq.size());
-LinkedList<Term> ret = new LinkedList<>();
-for (int i = 0; i < numResults; i++) {
-	ret.addFirst(pq.remove());
-}
+
 return ret;
 END CODE
 
-Time complexity: O(NlogM + klogM)
+Time complexity: O(Nlogk)
 
 The code first looks at each of N terms in myTerms, and performs 
-a logM complexity operation for each term that matches the 
+a logk complexity operation for each term that matches the 
 startsWith(prefix) condition, resulting in the first term being a 
-NlogM operation. Then, to add the terms to a new LinkedList,
-the code looks at each of the first k words (worst case), and 
-performs a logM operation on each word by removing it. Each of the 
-operations on the priority queue that change the size of the priority
-queue are logM time because the PQ contains M Terms and each addition
-and removal is a log operation.
+NlogM operation. Each of the operations on the priority queue 
+that change the size of the priority queue are logM time because 
+the PQ contains k Terms and each addition and removal
+is a log operation.
 
 (4) Explain why the last for loop in BruteAutocomplete.topMatches 
 uses a LinkedList (and not an ArrayList) 
@@ -139,11 +133,11 @@ for(int i = 0; i < numResults; i++)
 return list;
 END CODE
 
-Time Complexity: O(logN + M + logM)
+Time Complexity: O(logN + k + MlogM)
 
 The code first determines the first and last indexes of matching Terms
 which is two logN operations, as specified by the runtime complexity of 
 the firstIndex and lastIndex methods. Then, the code copies the words
-in the matching range to a new array, resulting in M additions for 
+in the matching range to a new array, resulting in k additions for 
 each of the relevant matches. Finally, this array is sorted using
-the internal binary method, resulting in a logM sort.
+the internal quick sort method, resulting in a MlogM sort.
